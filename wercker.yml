@@ -3,6 +3,12 @@
 # Read more about containers on our dev center
 # https://devcenter.wercker.com/overview-and-core-concepts/containers/
 box: openjdk:8-jdk
+services:
+  - id: postgres
+    env:
+      POSTGRES_PASSWORD: quiz.2019
+      POSTGRES_USER: quiz_rw
+      POSTGRES_DB: quiz_app
 
 # This is the build pipeline. Pipelines are the core of wercker
 # Read more about pipelines on our dev center

@@ -18,6 +18,18 @@ build:
     # Read more about steps on our dev center:
     # https://devcenter.wercker.com/development/steps/
   steps:
+    # Waiting for postgres service to come up
+    - script: 
+      name: Wait for postgres connection
+      code: | 
+        while ! nc -q 1 $POSTGRES_PORT_5432_TCP_ADDR $POSTGRES_PORT_5432_TCP_PORT
+        </dev/null; do sleep 3; done
+
+    # Getting the environment variables
+    - script:
+       name: env
+       code: env
+       
     # https://github.com/wercker/step-maven
     - wercker/maven:
       goals: clean install

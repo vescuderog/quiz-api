@@ -126,11 +126,6 @@
                     <target>${maven.compiler.target}</target>
                     <annotationProcessorPaths>
                         <path>
-                            <groupId>com.merkone</groupId>
-                            <artifactId>quiz</artifactId>
-                            <version>${project.version}</version>
-                        </path>
-                        <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
                             <version>${org.mapstruct.version}</version>

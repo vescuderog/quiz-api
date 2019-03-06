@@ -1,0 +1,319 @@
+swagger: '2.0'
+info:
+  title: Quiz API
+  description: API description for Quiz App
+  version: 1.0.0
+  contact:
+    name: vescudero
+    url: www.linkedin.com/in/victor-escudero-garcia
+    email: victorescuderogarcia@gmail.com
+  license:
+    name: unlicense
+    url: http://unlicense.org
+
+host: localhost:8080
+basePath: /api/quiz/v1
+schemes:
+  - http
+
+tags:
+- name: questions
+  description: 'Quiz Questions'
+- name: answers
+  description: 'Quiz Answers'
+  
+paths:
+  /questions:
+    get:
+      tags:
+      - questions
+      summary: 'Get questions list'
+      produces:
+      - application/json
+      operationId: getQuestions
+      responses:
+        200:
+          description: 'A JSON array of questions'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/QuestionDTO'
+        400:
+          description: 'Bad Request'
+          schema:
+            $ref: '#/definitions/QuizExceptionDTO'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        404:
+          description: 'Not Found'
+        415:
+          description: 'Unsupported'
+        500:
+          description: 'Unexpected Error'    
+          schema:
+            $ref: '#/definitions/QuizExceptionDTO'
+    post:
+      tags:
+      - questions
+      summary: 'Create question'
+      produces:
+      - application/json
+      operationId: addQuestion
+      parameters:
+      - name: question
+        in: body
+        description: 'A JSON of question'
+        required: true
+        schema:
+          $ref: '#/definitions/QuestionDTO'
+      responses:
+        201:
+          description: 'Question created successfully'
+          headers:
+            Location:
+              type: string
+              description: The url to get the question created
+        400:
+          description: 'Bad Request'
+          schema:
+            $ref: '#/definitions/QuizExceptionDTO'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        404:
+          description: 'Not Found'
+        415:
+          description: 'Unsupported'
+        500:
+          description: 'Unexpected Error'    
+          schema:
+            $ref: '#/definitions/QuizExceptionDTO'
+
+  /questions/{question-id}:
+    get:
+      tags:
+      - questions
+      summary: 'Get question'
+      produces:
+      - application/json
+      operationId: getQuestionById
+      parameters:
+      - name: question-id
+        in: path
+        description: 'Question id'
+        required: true
+        type: string
+      responses:
+        200:
+          description: 'A JSON of question'
+          schema:
+            $ref: '#/definitions/QuestionDTO'
+        400:
+          description: 'Bad Request'
+          schema:
+            $ref: '#/definitions/QuizExceptionDTO'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        404:
+          description: 'Not Found'
+        415:
+          description: 'Unsupported'
+        500:
+          description: 'Unexpected Error'    
+          schema:
+            $ref: '#/definitions/QuizExceptionDTO'
+    patch:
+      tags:
+      - questions
+      summary: 'Update question'
+      produces:
+      - application/json
+      operationId: updateQuestion
+      parameters:
+      - name: question-id
+        in: path
+        description: 'Question id'
+        required: true
+        type: string
+      - name: question
+        in: body
+        description: 'A JSON of question'
+        required: true
+        schema:
+          $ref: '#/definitions/QuestionDTO'
+      responses:
+        200:
+          description: 'Question updated successfully'
+          schema:
+            $ref: '#/definitions/QuestionDTO'
+        400:
+          description: 'Bad Request'
+          schema:
+            $ref: '#/definitions/QuizExceptionDTO'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        404:
+          description: 'Not Found'
+        415:
+          description: 'Unsupported'
+        500:
+          description: 'Unexpected Error'    
+          schema:
+            $ref: '#/definitions/QuizExceptionDTO'
+    delete:
+      tags:
+      - questions
+      summary: 'Delete question'
+      produces:
+      - application/json
+      operationId: deleteQuestionById
+      parameters:
+      - name: question-id
+        in: path
+        description: 'Question id'
+        required: true
+        type: string
+      responses:
+        204:
+          description: 'Question deleted successfully'
+        400:
+          description: 'Bad Request'
+          schema:
+            $ref: '#/definitions/QuizExceptionDTO'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        404:
+          description: 'Not Found'
+        415:
+          description: 'Unsupported'
+        500:
+          description: 'Unexpected Error'    
+          schema:
+            $ref: '#/definitions/QuizExceptionDTO'
+            
+  /answers/{answer-id}/question/{question-id}:
+    get:
+      tags:
+      - answers
+      summary: 'Check answer'
+      produces:
+      - application/json
+      operationId: checkAnswer
+      parameters:
+      - name: answer-id
+        in: path
+        description: 'Answer id'
+        required: true
+        type: string
+      - name: question-id
+        in: path
+        description: 'Question id'
+        required: true
+        type: string
+      responses:
+        200:
+          description: 'A JSON of result'
+          schema:
+            $ref: '#/definitions/ResultDTO'
+        400:
+          description: 'Bad Request'
+          schema:
+            $ref: '#/definitions/QuizExceptionDTO'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        404:
+          description: 'Not Found'
+        415:
+          description: 'Unsupported'
+        500:
+          description: 'Unexpected Error'    
+          schema:
+            $ref: '#/definitions/QuizExceptionDTO'
+
+definitions:
+  QuestionDTO:
+    type: object
+    required:
+      - question
+    properties:
+      id:
+        type: string
+        description: Id question (UUID format)
+      question:
+        type: string
+        description: Text question
+      creationDate:
+        type: integer
+        format: int64
+        description: Question creation date (Timestamp)
+      updateDate:
+        type: integer
+        format: int64
+        description: Question update date (Timestamp)
+      answers:
+        type: array
+        description: Possible answers to the question
+        items:
+            $ref: '#/definitions/AnswerDTO'
+    xml:
+      name: 'QuestionDTO'
+
+  AnswerDTO:
+    type: object
+    required:
+      - answer
+    properties:
+      id:
+        type: string
+        description: Id answer (UUID format)
+      answer:
+        type: string
+        description: Text answer
+      creationDate:
+        type: integer
+        format: int64
+        description: Answer creation date (Timestamp)
+      updateDate:
+        type: integer
+        format: int64
+        description: Answer update date (Timestamp)
+      isCorrect:
+        type: boolean
+        description: True (correct) or false (incorrect)
+    xml:
+      name: 'AnswerDTO'
+      
+  ResultDTO:
+    type: object
+    properties:
+      isCorrect:
+        type: boolean
+        description: True (correct) or false (incorrect)
+    xml:
+      name: 'ResultDTO'
+
+  QuizExceptionDTO:
+    type: object
+    properties:
+      code:
+        type: number
+        description: Error code
+      message:
+        type: string
+        description: Error message
+      field:
+        type: string
+        description: Field associated with the error
+    xml:
+      name: 'QuizExceptionDTO'

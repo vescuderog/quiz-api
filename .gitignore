@@ -16,3 +16,4 @@
 /nbdist/
 /.nb-gradle/
 /build/
+nbactions.xml

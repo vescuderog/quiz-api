@@ -1,0 +1,58 @@
+# Application Context
+server:
+  contextPath: /
+  port: 8080
+
+# Logging
+logging:
+  level:
+    org:
+      springframework: INFO
+      hibernate: INFO
+      hibernate.SQL: DEBUG
+    com:
+      merkone: DEBUG
+      zaxxer.hikari: INFO
+    
+# Swagger
+springfox:
+  documentation:
+    swagger:
+      v2.path: /api-docs
+swagger:
+  apiVersion: 1.0.0
+  title: Quiz API
+  description: API REST
+  license: http://unlicense.org
+  created: vescudero
+  email: victorescuderogarcia@gmail.com
+
+# PostgreSQL database
+postgre:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/quiz_app
+    username: quiz_rw
+    password: quiz.2019
+    driver-class-name: org.postgresql.Driver
+  maxactive: 15
+  minidle: 2
+
+# Spring JPA
+spring:
+  jpa:
+    show-sql: true
+    database: default
+    open-in-view: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL94Dialect
+        format_sql: true
+        temp:
+          use_jdbc_metadata_defaults: false
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+# Liquibase
+liquibase:
+  enabled: true

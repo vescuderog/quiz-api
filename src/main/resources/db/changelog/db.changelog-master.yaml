@@ -1,0 +1,82 @@
+databaseChangeLog: 
+  - preConditions: 
+    - dbms:
+        type: postgresql
+        
+  - changeSet:
+      id: 1
+      author: vescudero
+      comment: Create database and load data
+      changes:
+        
+        # TABLE q_questions
+        - createTable:
+            columns:
+            - column:
+                autoIncrement: false
+                constraints:
+                  primaryKey: true
+                  primaryKeyName: qu_questions_pkey
+                name: id
+                type: UUID
+            - column:
+                name: question
+                type: VARCHAR
+            - column:
+                name: creation_date
+                type: TIMESTAMP WITH TIME ZONE
+            - column:
+                name: update_date
+                type: TIMESTAMP WITH TIME ZONE
+            tableName: q_questions
+        
+        # TABLE q_answers
+        - createTable:
+            columns:
+            - column:
+                autoIncrement: false
+                constraints:
+                  primaryKey: true
+                  primaryKeyName: an_answers_pkey
+                name: id
+                type: UUID
+            - column:
+                name: question_id
+                type: UUID
+            - column:
+                name: answer
+                type: VARCHAR
+            - column:
+                name: creation_date
+                type: TIMESTAMP WITH TIME ZONE
+            - column:
+                name: update_date
+                type: TIMESTAMP WITH TIME ZONE
+            - column:
+                name: correct
+                type: BOOLEAN
+            tableName: q_answers
+            
+        # CONSTRAINTS
+        - addForeignKeyConstraint:
+            baseColumnNames: question_id
+            baseTableName: q_answers
+            constraintName: fk_an_qu_id
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: q_questions
+            validate: true
+            
+        # INDEXES
+        - createIndex:
+            columns:
+            - column:
+                name: id
+            - column:
+                name: question_id
+            indexName: idx_an_qu_id
+            tableName: q_answers
+            unique: true        

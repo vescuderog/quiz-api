@@ -19,9 +19,9 @@ build:
     # https://devcenter.wercker.com/development/steps/
   steps:
     # Getting the environment variables
-    - script:
-       name: env
-       code: env
+    # - script:
+       # name: env
+       # code: env
        
     # Set up database
     - script:

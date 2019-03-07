@@ -2,9 +2,13 @@ package com.merkone.quiz.service.impl;
 
 import com.merkone.api.quiz.model.QuestionDTO;
 import com.merkone.api.quiz.server.QuestionsApiDelegate;
+import com.merkone.quiz.app.exception.NotFoundException;
+import com.merkone.quiz.domain.QQuestions;
 import com.merkone.quiz.mapper.QuizMapper;
 import com.merkone.quiz.repository.QuestionsRepository;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,17 +31,44 @@ public class QuestionsApiDelegateImpl implements QuestionsApiDelegate {
 
     @Override
     public ResponseEntity<Void> addQuestion(QuestionDTO question) {
-        return QuestionsApiDelegate.super.addQuestion(question); //To change body of generated methods, choose Tools | Templates.
+        LOGGER.debug("Adding question");
+        // TODO: Validate mandatory parameters
+        QQuestions qquestion = QuizMapper.INSTANCE.map(question);
+        qquestion.setId(UUID.randomUUID());
+        qquestion.setCreationDate(new Date());
+        qquestion.setUpdateDate(new Date());
+        qquestion.getQAnswersList().stream().forEach(a -> {
+            a.setId(UUID.randomUUID());
+            a.setQuestionId(qquestion);
+            a.setCreationDate(new Date());
+            a.setUpdateDate(new Date());
+        });
+
+        questionsRepository.save(qquestion);
+        // TODO: Return header location
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<QuestionDTO> updateQuestion(String questionId, QuestionDTO question) {
+        // TODO: Pending to do
+        return QuestionsApiDelegate.super.updateQuestion(questionId, question);
     }
 
     @Override
     public ResponseEntity<Void> deleteQuestionById(String questionId) {
-        return QuestionsApiDelegate.super.deleteQuestionById(questionId); //To change body of generated methods, choose Tools | Templates.
+        // TODO: Pending to do
+        return QuestionsApiDelegate.super.deleteQuestionById(questionId);
     }
 
     @Override
     public ResponseEntity<QuestionDTO> getQuestionById(String questionId) {
-        return QuestionsApiDelegate.super.getQuestionById(questionId); //To change body of generated methods, choose Tools | Templates.
+        LOGGER.debug("Getting question with id: " + questionId);
+        QQuestions question = questionsRepository.findById(UUID.fromString(questionId)).orElse(null);
+        if (null == question) {
+            throw new NotFoundException(questionId);
+        }
+        return new ResponseEntity<>(QuizMapper.INSTANCE.map(question), HttpStatus.OK);
     }
 
     @Override

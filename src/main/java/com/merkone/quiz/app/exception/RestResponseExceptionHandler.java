@@ -6,6 +6,7 @@ import java.nio.file.AccessDeniedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -25,7 +26,10 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
     // 400
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<Object> handleIllegalArgument(final Exception ex, final WebRequest request) {
-        return handleException(ex, null, HttpStatus.BAD_REQUEST, request);
+        QuizExceptionDTO error = new QuizExceptionDTO();
+        error.setCode(BigDecimal.valueOf(HttpStatus.BAD_REQUEST.value()));
+        error.setMessage(ex.getMessage());
+        return handleException(ex, error, HttpStatus.BAD_REQUEST, request);
     }
 
     // 403
@@ -39,7 +43,7 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
     public ResponseEntity<Object> handleNotFoundException(final NotFoundException ex, final WebRequest request) {
         QuizExceptionDTO error = new QuizExceptionDTO();
         error.setCode(BigDecimal.valueOf(HttpStatus.NOT_FOUND.value()));
-        error.setMessage(String.format("La entidad %s no existe", ex.getMessage()));
+        error.setMessage(String.format("Entity %s not found", ex.getMessage()));
         return handleException(ex, error, HttpStatus.NOT_FOUND, request);
     }
 
@@ -49,12 +53,22 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
         QuizExceptionDTO error = new QuizExceptionDTO();
         error.setCode(BigDecimal.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
         // TODO: Check the exception to identify the error and the affected field
-        error.setMessage("Se ha producido un error procesando la petición");
-        error.setField("-");
+        error.setMessage("An error occurred while processing the request");
         return handleException(ex, error, HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
-    private ResponseEntity<Object> handleException(Exception ex, Object body, HttpStatus httpStatus, WebRequest request) {
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+            HttpHeaders headers, HttpStatus status, WebRequest request) {
+        QuizExceptionDTO error = new QuizExceptionDTO();
+        error.setCode(BigDecimal.valueOf(status.value()));
+        error.setMessage(ex.getMessage());
+        error.setField(ex.getParameter().getParameterName());
+        return handleException(ex, error, status, request);
+    }
+
+    private ResponseEntity<Object> handleException(Exception ex, Object body, HttpStatus httpStatus,
+            WebRequest request) {
         this.logger.error("Exception: " + ex.getMessage() + " --> " + httpStatus.getReasonPhrase(), ex);
         return handleExceptionInternal(ex, body, new HttpHeaders(), httpStatus, request);
     }

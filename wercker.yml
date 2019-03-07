@@ -35,7 +35,12 @@ build:
          echo $POSTGRE_DATASOURCE_USERNAME
     
     # Install
-    - script:
-       name: install
-       code: |
-         mvn -Dmaven.repo.local=$WERCKER_CACHE_DIR/.m2 clean install
+    # - script:
+       # name: install
+       # code: |
+         # mvn -Dmaven.repo.local=$WERCKER_CACHE_DIR/.m2 clean install
+         
+    # https://github.com/wercker/step-maven
+    - wercker/maven:
+      goals: clean install
+      cache_repo: true

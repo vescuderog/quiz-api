@@ -44,3 +44,14 @@ build:
     - wercker/maven:
       goals: clean install
       cache_repo: true
+      
+sonar:
+   # Analyze the source code
+   - script:
+     name: sonar
+     code: |
+       mvn sonar:sonar \
+       -Dsonar.projectKey=quiz-api \
+       -Dsonar.organization=vescuderog-github \
+       -Dsonar.host.url=https://sonarcloud.io \
+       -Dsonar.login=948263eedad9e180e239fd730df62637eb0ab389

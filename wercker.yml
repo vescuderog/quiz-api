@@ -44,7 +44,6 @@ build:
     - wercker/maven:
       goals: clean install
       cache_repo: true
-      
 sonar:
    # Analyze the source code
    - script:

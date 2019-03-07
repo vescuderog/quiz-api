@@ -63,7 +63,7 @@ public class PostgreDatasourceConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws Exception {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(postgreDataSource());
-        em.setPackagesToScan(new String[]{"com.merkone.quiz.domain"});
+        em.setPackagesToScan("com.merkone.quiz.domain");
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         HashMap<String, Object> properties = new HashMap<>();

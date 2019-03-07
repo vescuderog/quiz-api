@@ -63,7 +63,7 @@ public class QuestionsApiDelegateImpl implements QuestionsApiDelegate {
 
     @Override
     public ResponseEntity<QuestionDTO> getQuestionById(String questionId) {
-        LOGGER.debug("Getting question with id: " + questionId);
+        LOGGER.debug("Getting question with id: {}", questionId);
         QQuestions question = questionsRepository.findById(UUID.fromString(questionId)).orElse(null);
         if (null == question) {
             throw new NotFoundException(questionId);

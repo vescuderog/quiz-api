@@ -19,14 +19,14 @@ public class PostgreConnectionPool {
 
     @SuppressWarnings("rawtypes")
     public PostgreConnectionPool(String driver, String url, String user, String password,
-            int maxActive, /*int maxIdle,*/ int minIdle) throws Exception {
+            int maxActive, /*int maxIdle,*/ int minIdle) {
         LOGGER.debug("Creación del pool de conexiones a Postgre");
-        LOGGER.debug("PostgreDriver :       [" + driver + "]");
-        LOGGER.debug("PostgreUrl :          [" + url + "]");
-        LOGGER.debug("PostgreUser :         [" + user + "]");
-        LOGGER.debug("PostgreMaxActive :    [" + maxActive + "]");
-//        LOGGER.debug("PostgreMaxIdle :      [" + maxIdle + "]");
-        LOGGER.debug("PostgreminIdle :      [" + minIdle + "]");
+        LOGGER.debug("PostgreDriver :       [{}]", driver);
+        LOGGER.debug("PostgreUrl :          [{}]", url);
+        LOGGER.debug("PostgreUser :         [{}]", user);
+        LOGGER.debug("PostgreMaxActive :    [{}]", maxActive);
+//        LOGGER.debug("PostgreMaxIdle :      [{}]", maxIdle);
+        LOGGER.debug("PostgreminIdle :      [{}]", minIdle);
 
         Properties props = new Properties();
         props.put("driverClassName", driver);

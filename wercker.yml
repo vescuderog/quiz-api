@@ -2,7 +2,7 @@
 # Docker Hub https://hub.docker.com/_/openjdk/
 # Read more about containers on our dev center
 # https://devcenter.wercker.com/overview-and-core-concepts/containers/
-box: maven:3.5.4
+box: maven:3.5.4-jdk-8-alpine
 services:
   - id: postgres
     env:
@@ -34,7 +34,7 @@ build:
          echo $POSTGRE_DATASOURCE_PASSWORD
          echo $POSTGRE_DATASOURCE_USERNAME
     
-    # Compile
+    # Install
     - script:
        name: install
        code: |

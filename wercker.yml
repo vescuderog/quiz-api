@@ -2,7 +2,7 @@
 # Docker Hub https://hub.docker.com/_/openjdk/
 # Read more about containers on our dev center
 # https://devcenter.wercker.com/overview-and-core-concepts/containers/
-box: openjdk:8-jdk
+box: maven:3.5.4
 services:
   - id: postgres
     env:
@@ -33,9 +33,9 @@ build:
          echo $POSTGRE_DATASOURCE_URL
          echo $POSTGRE_DATASOURCE_PASSWORD
          echo $POSTGRE_DATASOURCE_USERNAME
-
-    # https://github.com/wercker/step-maven
-    - wercker/maven:
-      goals: clean install
-      cache_repo: true
-      version: 3.5.4
+    
+    # Compile
+    - script:
+       name: install
+       code: |
+         mvn clean install

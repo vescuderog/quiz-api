@@ -50,7 +50,7 @@ sonar:
     - script:
        name: sonar
        code: |
-         mvn sonar:sonar \
+         mvn -Dmaven.repo.local=$WERCKER_CACHE_DIR/.m2 sonar:sonar \
          -Dsonar.projectKey=quiz-api \
          -Dsonar.organization=vescuderog-github \
          -Dsonar.host.url=https://sonarcloud.io \

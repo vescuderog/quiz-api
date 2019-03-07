@@ -38,4 +38,4 @@ build:
     - script:
        name: install
        code: |
-         mvn clean install
+         mvn -Dmaven.repo.local=$WERCKER_CACHE_DIR/.m2 clean install

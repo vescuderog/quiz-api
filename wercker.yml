@@ -70,8 +70,7 @@ deploy:
          apk update \
          && apk add --virtual build-dependencies \
          build-base \
-         git \
-         mktemp \
+         git
     # Deploy api in heroku
     - heroku-deploy:
         key: $HEROKU_KEY

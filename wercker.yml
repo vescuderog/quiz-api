@@ -63,14 +63,14 @@ sonar:
          -Dsonar.login=$LOGIN
 deploy:
   steps:
-    # Install git is required
+    # Install the required dependencies
     - script:
-       name: install-git
+       name: install-dependencies
        code: |
          apk update \
          && apk add --no-cache \
          git \
-         openssh-keygen
+         openssh
     # Deploy api in heroku
     - heroku-deploy:
         key: $HEROKU_KEY

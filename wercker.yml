@@ -64,7 +64,7 @@ sonar:
 deploy:
   steps:
     # Install git is required
-    - script
+    - script:
        name: install-git
        code: |
          apk update \

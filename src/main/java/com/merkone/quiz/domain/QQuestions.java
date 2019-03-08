@@ -10,8 +10,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -25,12 +23,7 @@ import org.hibernate.annotations.Type;
  * @author vescudero
  */
 @Entity
-@Table(name = "q_questions", catalog = "quiz_app", schema = "public")
-@NamedQueries({
-    @NamedQuery(name = "QQuestions.findAll", query = "SELECT q FROM QQuestions q")
-    , @NamedQuery(name = "QQuestions.findByQuestion", query = "SELECT q FROM QQuestions q WHERE q.question = :question")
-    , @NamedQuery(name = "QQuestions.findByCreationDate", query = "SELECT q FROM QQuestions q WHERE q.creationDate = :creationDate")
-    , @NamedQuery(name = "QQuestions.findByUpdateDate", query = "SELECT q FROM QQuestions q WHERE q.updateDate = :updateDate")})
+@Table(name = "q_questions", schema = "public")
 public class QQuestions implements Serializable {
 
     private static final long serialVersionUID = 1L;

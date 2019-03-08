@@ -68,9 +68,9 @@ deploy:
        name: install-git
        code: |
          apk update \
-         && apk add --virtual build-dependencies \
-         build-base \
-         git
+         && apk add --no-cache \
+         git \
+         openssh-keygen
     # Deploy api in heroku
     - heroku-deploy:
         key: $HEROKU_KEY

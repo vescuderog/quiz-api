@@ -44,12 +44,6 @@ build:
     - wercker/maven:
       goals: clean install
       cache_repo: true
-test:
-  steps:
-    - script:
-       name: integration test
-       code: |
-         echo 'Python test'
 sonar:
   steps:
     # Analyze the source code

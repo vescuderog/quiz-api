@@ -84,6 +84,21 @@ deploy:
         app-name: api-quiz-app
 acceptance-test:
   steps:
+    # Install the required dependencies
+    - script:
+       name: install dependencies
+       code: |
+         apk update \
+         && apk add --no-cache \
+         python \
+         python-dev \
+         py-pip
+    # Checking python version
+    - script:
+        name: python information
+        code: |
+          echo "python version $(python --version) running"
+          echo "pip version $(pip --version) running"
     # Acceptance test
     - script:
        name: acceptance test

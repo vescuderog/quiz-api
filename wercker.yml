@@ -34,11 +34,19 @@ unit-test:
       cache_repo: true
 integration-test:
   steps:
-    # Integration testing
+    # Set up database
     - script:
-       name: maven integration test
+       name: set up db
        code: |
-         echo 'Integration test'
+         export POSTGRE_DATASOURCE_URL=jdbc:postgresql://$POSTGRES_PORT_5432_TCP_ADDR:$POSTGRES_PORT_5432_TCP_PORT/$POSTGRES_ENV_POSTGRES_DB
+         export POSTGRE_DATASOURCE_PASSWORD=$POSTGRES_ENV_POSTGRES_PASSWORD
+         export POSTGRE_DATASOURCE_USERNAME=$POSTGRES_ENV_POSTGRES_USER
+    # Integration testing
+    # failsafe:integration-test -> runs the integration tests of an application
+    # failsafe:verify -> verifies that the integration tests of an application passed
+    - wercker/maven:
+      goals: failsafe:integration-test failsafe:verify
+      cache_repo: true
 sonar:
   steps:
     # Analyze the source code

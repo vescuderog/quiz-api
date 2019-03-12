@@ -58,7 +58,7 @@ sonar:
          -Dsonar.organization=vescuderog-github \
          -Dsonar.host.url=https://sonarcloud.io \
          -Dsonar.login=$LOGIN \
-         -Dsonar.junit.reportPaths=/pipeline/source/target/surefire-reports
+         -Dsonar.junit.reportPaths=target/surefire-reports
 publish:
   steps:
     # Publish the package (jar)
@@ -84,20 +84,14 @@ deploy:
         user: $HEROKU_USER
         app-name: api-quiz-app
 acceptance-test:
+  box: python:3.7.2-alpine
   steps:
-    # Install the required dependencies
-    - script:
-       name: install dependencies
-       code: |
-         apk update \
-         && apk add --no-cache \
-         python3 \
-         pip3
-    # Checking python version
+    # checking python version
     - script:
         name: python information
         code: |
           echo "python version $(python --version) running"
+          echo "pip version $(pip --version) running"
     # Acceptance test
     - script:
        name: acceptance test

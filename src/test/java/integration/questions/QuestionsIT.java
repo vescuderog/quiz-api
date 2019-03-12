@@ -5,7 +5,6 @@ import com.merkone.api.quiz.model.QuestionDTO;
 import com.merkone.quiz.app.boot.QuizApplication;
 import com.merkone.quiz.app.utils.UtilJson;
 import java.util.Arrays;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +29,8 @@ public class QuestionsIT {
     @Autowired
     MockMvc mockMvc;
 
-    @Before
-    public void setUp() {
-        // Init DTO
-
-    }
-
     @Test
-    public void testAddQuestionCreated() throws Exception {
+    public void whenAddQuestionThenStatus201() throws Exception {
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setQuestion("Question test?");
         AnswerDTO answerDTO = new AnswerDTO();
@@ -53,7 +46,7 @@ public class QuestionsIT {
     }
 
     @Test
-    public void testAddQuestionBadRequest() throws Exception {
+    public void whenAddQuestionThenStatus400() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/quiz/v1/questions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)

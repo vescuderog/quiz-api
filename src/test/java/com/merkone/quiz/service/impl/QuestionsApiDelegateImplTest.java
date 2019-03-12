@@ -61,7 +61,7 @@ public class QuestionsApiDelegateImplTest {
     }
 
     @Test
-    public void addQuestionTest() {
+    public void testAddQuestion() {
         ResponseEntity response = questionsApiDelegateImpl.addQuestion(questionDTO);
 
         Mockito.verify(questionsRepository, Mockito.times(1)).save(Mockito.any(QQuestions.class));
@@ -69,7 +69,7 @@ public class QuestionsApiDelegateImplTest {
     }
 
     @Test
-    public void getQuestionByIdTest() {
+    public void testGetQuestionById() {
         Mockito.when(questionsRepository.findById(Mockito.any(UUID.class))).thenReturn(qQuestions);
 
         ResponseEntity<QuestionDTO> response = questionsApiDelegateImpl.getQuestionById(id);
@@ -82,7 +82,7 @@ public class QuestionsApiDelegateImplTest {
     }
 
     @Test
-    public void getQuestionsTest() {
+    public void testGetQuestions() {
         Mockito.when(questionsRepository.findAll()).thenReturn(
                 Arrays.asList(qQuestions.isPresent() ? qQuestions.get() : null));
 

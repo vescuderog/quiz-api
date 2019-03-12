@@ -22,31 +22,23 @@ build:
     # - script:
        # name: env
        # code: env
-       
-    # Set up database
+    # Install and skip tests. https://github.com/wercker/step-maven
+    - wercker/maven:
+      goals: clean install -DskipTests=false
+      cache_repo: true
+unit-test:
+  steps:
+    # Unit testing
+    - wercker/maven:
+      goals: clean test
+      cache_repo: true
+integration-test:
+  steps:
+    # Integration testing
     - script:
-       name: set up db
+       name: maven integration test
        code: |
-         export POSTGRE_DATASOURCE_URL=jdbc:postgresql://$POSTGRES_PORT_5432_TCP_ADDR:$POSTGRES_PORT_5432_TCP_PORT/$POSTGRES_ENV_POSTGRES_DB
-         export POSTGRE_DATASOURCE_PASSWORD=$POSTGRES_ENV_POSTGRES_PASSWORD
-         export POSTGRE_DATASOURCE_USERNAME=$POSTGRES_ENV_POSTGRES_USER
-         echo $POSTGRE_DATASOURCE_URL
-         echo $POSTGRE_DATASOURCE_PASSWORD
-         echo $POSTGRE_DATASOURCE_USERNAME
-    # https://github.com/wercker/step-maven
-    # - wercker/maven:
-      # goals: clean install
-      # cache_repo: true
-    # Install
-    - script:
-       name: maven install
-       code: |
-         mvn -Dmaven.repo.local=$WERCKER_CACHE_DIR/.m2 clean install -DskipTests=false
-    # Test: unit and integration
-    - script:
-       name: maven test
-       code: |
-         mvn -Dmaven.repo.local=$WERCKER_CACHE_DIR/.m2 clean install
+         echo 'Integration test'
 sonar:
   steps:
     # Analyze the source code
@@ -58,19 +50,33 @@ sonar:
          -Dsonar.organization=vescuderog-github \
          -Dsonar.host.url=https://sonarcloud.io \
          -Dsonar.login=$LOGIN
+publish:
+  steps:
+    # Publish the package (jar)
+    - script:
+       name: publish
+       code: |
+         echo 'Publish on Docker|Nexus|Artifactory'
 deploy:
   steps:
     # Install the required dependencies
     - script:
-       name: install-dependencies
+       name: install dependencies
        code: |
          apk update \
          && apk add --no-cache \
          git \
          openssh
-    # Deploy api in heroku
+    # Deploy api in heroku (integration environment)
     - heroku-deploy:
         key: $HEROKU_KEY
         key-name: DEPLOY_KEY
         user: $HEROKU_USER
         app-name: api-quiz-app
+acceptance-test:
+  steps:
+    # Acceptance test
+    - script:
+       name: acceptance test
+       code: |
+         echo 'Python test'

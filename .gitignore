@@ -17,3 +17,4 @@
 /.nb-gradle/
 /build/
 nbactions.xml
+/nbproject/

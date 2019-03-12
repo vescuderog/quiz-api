@@ -57,7 +57,9 @@ sonar:
          -Dsonar.projectKey=quiz-api \
          -Dsonar.organization=vescuderog-github \
          -Dsonar.host.url=https://sonarcloud.io \
-         -Dsonar.login=$LOGIN
+         -Dsonar.login=$LOGIN \
+         -Dsonar.tests=junit \
+         -Dsonar.junit.reportsPath=target/surefire-reports
 publish:
   steps:
     # Publish the package (jar)

@@ -66,7 +66,8 @@ publish:
        name: publish
        code: |
          echo 'Publish on Docker|Nexus|Artifactory'
-         ls -l /pipeline/source/target/
+         ls -l target/
+         ls -l target/surefire-reports
 deploy:
   steps:
     # Install the required dependencies

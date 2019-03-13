@@ -92,15 +92,18 @@ acceptance-test:
           echo "python version $(python --version) running"
           echo "pip version $(pip --version) running"
     # Install the required dependencies
+    # Clone and install python qa project
     - script:
-       name: install dependencies
+       name: set up qa project
        code: |
          apk update \
          && apk add --no-cache \
          git \
-         openssh
+         git clone https://$GIT_HUB_USER:$GIT_HUB_TOKEN@github.com/vescuderog/quiz-api-qa.git \
+         cd quiz-api-q \
+         pip3 install -r requirements.txt
     # Acceptance test
     - script:
        name: acceptance test
        code: |
-         echo 'Python test'
+         pytest

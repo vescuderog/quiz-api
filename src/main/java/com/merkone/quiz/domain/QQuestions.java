@@ -3,7 +3,6 @@ package com.merkone.quiz.domain;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -90,28 +89,6 @@ public class QQuestions implements Serializable {
 
     public void setQAnswersList(List<QAnswers> qAnswersList) {
         this.qAnswersList = qAnswersList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final QQuestions other = (QQuestions) obj;
-        return Objects.equals(this.id, other.id);
     }
 
     @Override

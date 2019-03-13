@@ -1,4 +1,4 @@
-package integration.questions;
+package com.merkone.quiz.integration.questions;
 
 import com.merkone.api.quiz.model.AnswerDTO;
 import com.merkone.api.quiz.model.QuestionDTO;

@@ -98,7 +98,7 @@ acceptance-test:
        code: |
          apk update && apk add --no-cache git
          git clone https://$GIT_HUB_USER:$GIT_HUB_TOKEN@github.com/vescuderog/quiz-api-qa.git
-         cd quiz-api-q
+         cd quiz-api-qa
          pip3 install -r requirements.txt
     # Acceptance test
     - script:

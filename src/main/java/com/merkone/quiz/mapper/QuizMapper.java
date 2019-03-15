@@ -5,6 +5,7 @@ import com.merkone.api.quiz.model.QuestionDTO;
 import com.merkone.quiz.domain.QAnswers;
 import com.merkone.quiz.domain.QQuestions;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -26,6 +27,8 @@ public interface QuizMapper {
     QAnswers map(AnswerDTO answerDTO);
 
     AnswerDTO map(QAnswers qAnswers);
+
+    List<QAnswers> map(List<AnswerDTO> answerDTO);
 
     @Mappings({
         @Mapping(source = "answers", target = "QAnswersList")})

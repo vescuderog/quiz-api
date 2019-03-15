@@ -2,10 +2,12 @@ package com.merkone.quiz.service.impl;
 
 import com.merkone.api.quiz.model.AnswerDTO;
 import com.merkone.api.quiz.model.QuestionDTO;
+import com.merkone.quiz.domain.QAnswers;
 import com.merkone.quiz.domain.QQuestions;
 import com.merkone.quiz.mapper.QuizMapper;
 import com.merkone.quiz.repository.QuestionsRepository;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -57,7 +59,10 @@ public class QuestionsApiDelegateImplTest {
 
         // Init entity
         id = String.valueOf(UUID.randomUUID());
-        qQuestions = Optional.of(new QQuestions(UUID.fromString(id)));
+        QQuestions q = new QQuestions(UUID.fromString(id));
+        q.setQAnswersList(new LinkedList<>(
+                Arrays.asList(new QAnswers(UUID.randomUUID()))));
+        qQuestions = Optional.of(q);
     }
 
     @Test
@@ -67,6 +72,21 @@ public class QuestionsApiDelegateImplTest {
         Mockito.verify(questionsRepository, Mockito.times(1)).save(Mockito.any(QQuestions.class));
         Assert.assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Assert.assertNotNull(response.getHeaders().getLocation());
+    }
+
+    @Test
+    public void testUpdateQuestion() {
+        Mockito.when(questionsRepository.findById(Mockito.any(UUID.class))).thenReturn(qQuestions);
+        Mockito.when(questionsRepository.save(Mockito.any(QQuestions.class))).thenReturn(qQuestions.orElse(null));
+
+        ResponseEntity<QuestionDTO> response = questionsApiDelegateImpl.updateQuestion(id, questionDTO);
+
+        Mockito.verify(questionsRepository, Mockito.times(1)).save(Mockito.any(QQuestions.class));
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assert.assertNotNull(response.getBody());
+        QuestionDTO question = response.getBody();
+        Assert.assertThat(id, equalTo(question != null ? question.getId() : null));
+        Assert.assertThat(question != null ? question.getAnswers() : null, hasSize(1));
     }
 
     @Test
@@ -94,8 +114,7 @@ public class QuestionsApiDelegateImplTest {
 
     @Test
     public void testGetQuestions() {
-        Mockito.when(questionsRepository.findAll()).thenReturn(
-                Arrays.asList(qQuestions.isPresent() ? qQuestions.get() : null));
+        Mockito.when(questionsRepository.findAll()).thenReturn(Arrays.asList(qQuestions.orElse(null)));
 
         ResponseEntity<List<QuestionDTO>> response = questionsApiDelegateImpl.getQuestions();
 

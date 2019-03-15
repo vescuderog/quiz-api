@@ -3,6 +3,7 @@ package com.merkone.quiz.service.impl;
 import com.merkone.api.quiz.model.QuestionDTO;
 import com.merkone.api.quiz.server.QuestionsApiDelegate;
 import com.merkone.quiz.app.exception.NotFoundException;
+import com.merkone.quiz.domain.QAnswers;
 import com.merkone.quiz.domain.QQuestions;
 import com.merkone.quiz.mapper.QuizMapper;
 import com.merkone.quiz.repository.QuestionsRepository;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
@@ -61,8 +63,31 @@ public class QuestionsApiDelegateImpl implements QuestionsApiDelegate {
 
     @Override
     public ResponseEntity<QuestionDTO> updateQuestion(String questionId, QuestionDTO question) {
-        // TODO: Pending to do
-        return QuestionsApiDelegate.super.updateQuestion(questionId, question);
+        LOGGER.debug("Updating question with id: {}", questionId);
+        QQuestions qquestion = getQQuestion(questionId);
+        if (!StringUtils.isEmpty(question.getQuestion())) {
+            qquestion.setQuestion(question.getQuestion());
+            qquestion.setUpdateDate(new Date());
+        }
+        // Replace the questions
+        if (!question.getAnswers().isEmpty()) {
+            // Delete the old answers
+            if (!qquestion.getQAnswersList().isEmpty()) {
+                qquestion.getQAnswersList().clear();
+            }
+
+            // Add the new answers
+            List<QAnswers> answers = QuizMapper.INSTANCE.map(question.getAnswers());
+            answers.stream().forEach(a -> {
+                a.setId(qquestion.getId());
+                a.setQuestionId(qquestion);
+                a.setCreationDate(new Date());
+                a.setUpdateDate(new Date());
+            });
+            qquestion.getQAnswersList().addAll(answers);
+        }
+        return new ResponseEntity<>(QuizMapper.INSTANCE.map(questionsRepository.save(qquestion)),
+                HttpStatus.OK);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.merkone.quiz.app.exception.NotFoundException;
 import com.merkone.quiz.domain.QQuestions;
 import com.merkone.quiz.mapper.QuizMapper;
 import com.merkone.quiz.repository.QuestionsRepository;
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -13,9 +14,11 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  *
@@ -45,8 +48,15 @@ public class QuestionsApiDelegateImpl implements QuestionsApiDelegate {
         });
 
         questionsRepository.save(qquestion);
-        // TODO: Return header location
-        return new ResponseEntity<>(HttpStatus.CREATED);
+
+        // Add the location header with the question id
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(qquestion.getId())
+                .toUri();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(location);
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @Override
@@ -57,18 +67,15 @@ public class QuestionsApiDelegateImpl implements QuestionsApiDelegate {
 
     @Override
     public ResponseEntity<Void> deleteQuestionById(String questionId) {
-        // TODO: Pending to do
-        return QuestionsApiDelegate.super.deleteQuestionById(questionId);
+        LOGGER.debug("Deleting question with id: {}", questionId);
+        questionsRepository.delete(getQQuestion(questionId));
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Override
     public ResponseEntity<QuestionDTO> getQuestionById(String questionId) {
         LOGGER.debug("Getting question with id: {}", questionId);
-        QQuestions question = questionsRepository.findById(UUID.fromString(questionId)).orElse(null);
-        if (null == question) {
-            throw new NotFoundException(questionId);
-        }
-        return new ResponseEntity<>(QuizMapper.INSTANCE.map(question), HttpStatus.OK);
+        return new ResponseEntity<>(QuizMapper.INSTANCE.map(getQQuestion(questionId)), HttpStatus.OK);
     }
 
     @Override
@@ -80,6 +87,14 @@ public class QuestionsApiDelegateImpl implements QuestionsApiDelegate {
                         .map(QuizMapper.INSTANCE::map)
                         .collect(Collectors.toList());
         return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    private QQuestions getQQuestion(String questionId) throws NotFoundException {
+        QQuestions question = questionsRepository.findById(UUID.fromString(questionId)).orElse(null);
+        if (null == question) {
+            throw new NotFoundException(questionId);
+        }
+        return question;
     }
 
 }

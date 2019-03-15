@@ -66,6 +66,17 @@ public class QuestionsApiDelegateImplTest {
 
         Mockito.verify(questionsRepository, Mockito.times(1)).save(Mockito.any(QQuestions.class));
         Assert.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        Assert.assertNotNull(response.getHeaders().getLocation());
+    }
+
+    @Test
+    public void testDeleteQuestionById() {
+        Mockito.when(questionsRepository.findById(Mockito.any(UUID.class))).thenReturn(qQuestions);
+
+        ResponseEntity response = questionsApiDelegateImpl.deleteQuestionById(id);
+
+        Mockito.verify(questionsRepository, Mockito.times(1)).delete(Mockito.any(QQuestions.class));
+        Assert.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test

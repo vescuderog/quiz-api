@@ -15,7 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  *
@@ -42,7 +42,8 @@ public class QuestionsIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(UtilJson.asJsonString(questionDTO)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"));
     }
 
     @Test
@@ -51,7 +52,18 @@ public class QuestionsIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(UtilJson.asJsonString(new QuestionDTO())))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(header().doesNotExist("Location"));
+    }
+
+    @Test
+    public void GivenQuestionsWhenGetQuestionsThenStatus200() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/quiz/v1/questions")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[*].id").isNotEmpty())
+                .andExpect(jsonPath("$[*].answers").exists())
+                .andExpect(jsonPath("$[*].answers[*].id").isNotEmpty());
     }
 
 }

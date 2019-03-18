@@ -93,10 +93,10 @@ public class PostgreDatasourceConfig {
 
     @Bean("postgreConnectionPool")
     @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public PostgreConnectionPool getPostgreConnectionPool() throws Exception {
+    public PostgreConnectionPool getPostgreConnectionPool() {
         LOGGER.info("Loading PostgreConnectionPool");
         String pwd = (cyberArkPostgrePassword != null && !cyberArkPostgrePassword.isEmpty()) ? cyberArkPostgrePassword : password;
-        return new PostgreConnectionPool(className, databaseUrl, username, pwd, maxActive, /*maxIdle,*/ minIdle);
+        return new PostgreConnectionPool(className, databaseUrl, username, pwd, maxActive, minIdle);
     }
 
 }

@@ -114,7 +114,7 @@ public class QuestionsApiDelegateImpl implements QuestionsApiDelegate {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    private QQuestions getQQuestion(String questionId) throws NotFoundException {
+    private QQuestions getQQuestion(String questionId) {
         QQuestions question = questionsRepository.findById(UUID.fromString(questionId)).orElse(null);
         if (null == question) {
             throw new NotFoundException(questionId);

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
@@ -22,20 +21,17 @@ public interface QuizMapper {
 
     QuizMapper INSTANCE = Mappers.getMapper(QuizMapper.class);
 
-    @Mappings({
-        @Mapping(source = "isCorrect", target = "correct")})
+    @Mapping(source = "isCorrect", target = "correct")
     QAnswers map(AnswerDTO answerDTO);
 
     AnswerDTO map(QAnswers qAnswers);
 
     List<QAnswers> map(List<AnswerDTO> answerDTO);
 
-    @Mappings({
-        @Mapping(source = "answers", target = "QAnswersList")})
+    @Mapping(source = "answers", target = "QAnswersList")
     QQuestions map(QuestionDTO questionDTO);
 
-    @Mappings({
-        @Mapping(source = "QAnswersList", target = "answers")})
+    @Mapping(source = "QAnswersList", target = "answers")
     QuestionDTO map(QQuestions qQuestions);
 
     // Custom map

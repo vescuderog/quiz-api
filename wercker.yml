@@ -70,7 +70,7 @@ publish:
        image-name: quiz-image
        username: $USERNAME
        password: $PASSWORD
-       registry: https://cloud.docker.com
+       registry: https://registry.hub.docker.com
        repository: $USERNAME/quiz-api
 deploy:
   steps:

@@ -61,12 +61,17 @@ sonar:
          -Dsonar.login=$LOGIN
 publish:
   steps:
-    # Publish the package (jar)
-    - script:
-       name: publish
-       code: |
-         echo 'Publish on Docker|Nexus|Artifactory'
-         ls -l target/
+    # Creating a Docker image using a Dockerfile
+    - internal/docker-build:
+       dockerfile: Dockerfile
+       image-name: quiz-image
+    # Publish the package (jar) on Docker Hub
+    - internal/docker-push:
+       image-name: quiz-image
+       username: $USERNAME
+       password: $PASSWORD
+       registry: https://hub.docker.com
+       repository: $USERNAME/quiz-api
 deploy:
   steps:
     # Install the required dependencies

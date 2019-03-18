@@ -68,8 +68,8 @@ publish:
     # Publish the package (jar) on Docker Hub
     - internal/docker-push:
        image-name: quiz-image
-       username: $USERNAME
-       password: $PASSWORD
+       # username: $USERNAME
+       # password: $PASSWORD
        registry: https://hub.docker.com
        repository: $USERNAME/quiz-api
 deploy:

@@ -70,9 +70,9 @@ public class QuestionsApiDelegateImpl implements QuestionsApiDelegate {
             qquestion.setUpdateDate(new Date());
         }
         // Replace the questions
-        if (!question.getAnswers().isEmpty()) {
+        if (null != question.getAnswers() && !question.getAnswers().isEmpty()) {
             // Delete the old answers
-            if (!qquestion.getQAnswersList().isEmpty()) {
+            if (null != qquestion.getQAnswersList() && !qquestion.getQAnswersList().isEmpty()) {
                 qquestion.getQAnswersList().clear();
             }
 

@@ -2,6 +2,7 @@ package com.merkone.quiz.service.impl;
 
 import com.merkone.api.quiz.model.AnswerDTO;
 import com.merkone.api.quiz.model.QuestionDTO;
+import com.merkone.quiz.app.exception.NotFoundException;
 import com.merkone.quiz.domain.QAnswers;
 import com.merkone.quiz.domain.QQuestions;
 import com.merkone.quiz.mapper.QuizMapper;
@@ -90,6 +91,22 @@ public class QuestionsApiDelegateImplTest {
     }
 
     @Test
+    public void testUpdateQuestionEmptyDTO() {
+        Optional<QQuestions> qq = Optional.of(new QQuestions(UUID.fromString(id)));
+        Mockito.when(questionsRepository.findById(Mockito.any(UUID.class))).thenReturn(qq);
+        Mockito.when(questionsRepository.save(Mockito.any(QQuestions.class))).thenReturn(qq.orElse(null));
+
+        ResponseEntity<QuestionDTO> response = questionsApiDelegateImpl.updateQuestion(id, new QuestionDTO());
+
+        Mockito.verify(questionsRepository, Mockito.times(1)).save(Mockito.any(QQuestions.class));
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assert.assertNotNull(response.getBody());
+        QuestionDTO question = response.getBody();
+        Assert.assertThat(id, equalTo(question != null ? question.getId() : null));
+        Assert.assertThat(question != null ? question.getAnswers() : null, anyOf(is(nullValue()), empty()));
+    }
+
+    @Test
     public void testDeleteQuestionById() {
         Mockito.when(questionsRepository.findById(Mockito.any(UUID.class))).thenReturn(qQuestions);
 
@@ -110,6 +127,16 @@ public class QuestionsApiDelegateImplTest {
         Assert.assertNotNull(response.getBody());
         QuestionDTO question = response.getBody();
         Assert.assertThat(id, equalTo(question != null ? question.getId() : null));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testGetQuestionByIdNotFoundException() {
+        Mockito.when(questionsRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.empty());
+
+        ResponseEntity<QuestionDTO> response = questionsApiDelegateImpl.getQuestionById(id);
+
+        Mockito.verify(questionsRepository, Mockito.times(1)).findById(Mockito.any(UUID.class));
+        Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test

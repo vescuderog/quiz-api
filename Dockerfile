@@ -11,4 +11,4 @@ ENTRYPOINT ["java"]
 
 # CMD is required to run on Heroku
 # $PORT is set by Heroku			
-CMD ["-Djava.security.egd=file:/dev/./urandom","-Dserver.port=$PORT","-jar","/quiz.jar"]
+CMD ["-Dserver.port=${PORT}", "-Djava.security.egd=file:/dev/./urandom","-jar","/quiz.jar"]

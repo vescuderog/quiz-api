@@ -83,11 +83,18 @@ deploy:
          git \
          openssh
     # Deploy api on heroku (integration environment)
-    - heroku-deploy:
-        key: $HEROKU_KEY
-        key-name: DEPLOY_KEY
-        user: $HEROKU_USER
-        app-name: api-quiz-app
+    # - heroku-deploy:
+        # key: $HEROKU_KEY
+        # key-name: DEPLOY_KEY
+        # user: $HEROKU_USER
+        # app-name: api-quiz-app
+    # Deploy docker on heroku
+    - internal/docker-push:
+       image-name: quiz-image
+       username: $HEROKU_USER
+       password: $HEROKU_KEY
+       registry: https://registry.heroku.com
+       repository: registry.heroku.com/api-quiz-app-docker/web
 acceptance-test:
   box: python:3.7.2-alpine
   steps:

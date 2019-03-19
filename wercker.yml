@@ -65,13 +65,20 @@ publish:
     - internal/docker-build:
        dockerfile: Dockerfile
        image-name: quiz-image
-    # Publish the package (jar) on Docker Hub
+    # Publish the image on Docker Hub
     - internal/docker-push:
        image-name: quiz-image
        username: $USERNAME
        password: $PASSWORD
        registry: https://registry.hub.docker.com
        repository: $USERNAME/quiz-api
+    # Publish the image on Heroku
+    - internal/docker-push:
+       image-name: quiz-image
+       username: $HEROKU_USER
+       password: $HEROKU_KEY
+       registry: https://registry.heroku.com
+       repository: registry.heroku.com/api-quiz-app-docker/web
 deploy:
   steps:
     # Install the required dependencies
@@ -82,19 +89,12 @@ deploy:
          && apk add --no-cache \
          git \
          openssh
-    # Deploy api on heroku (integration environment)
-    # - heroku-deploy:
-        # key: $HEROKU_KEY
-        # key-name: DEPLOY_KEY
-        # user: $HEROKU_USER
-        # app-name: api-quiz-app
-    # Deploy docker on Heroku
-    - internal/docker-push:
-       image-name: quiz-image
-       username: $HEROKU_USER
-       password: $HEROKU_KEY
-       registry: https://registry.heroku.com
-       repository: registry.heroku.com/api-quiz-app-docker/web
+    # Deploy package jar on heroku (integration environment)
+    - heroku-deploy:
+        key: $HEROKU_KEY
+        key-name: DEPLOY_KEY
+        user: $HEROKU_USER
+        app-name: api-quiz-app
 acceptance-test:
   box: python:3.7.2-alpine
   steps:

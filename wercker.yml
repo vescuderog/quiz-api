@@ -72,7 +72,7 @@ publish:
        password: $PASSWORD
        registry: https://registry.hub.docker.com
        repository: $USERNAME/quiz-api
-    # Publish the image on Heroku
+    # Publish the image on Heroku to deploy in the next pipeline
     - internal/docker-push:
        image-name: quiz-image
        username: $HEROKU_USER
@@ -91,21 +91,22 @@ deploy:
          openssh \
          curl \
          nodejs
-    # Install Heroku CLI to deploy a docker
-    - script:
-       name: install Heroku CLI
-       code: |
-         curl https://cli-assets.heroku.com/install.sh | sh
-         heroku --version
     # Deploy package jar on heroku (integration environment)
     - heroku-deploy:
        key: $HEROKU_KEY
        key-name: DEPLOY_KEY
        user: $HEROKU_USER
        app-name: api-quiz-app
+    # Another option is to deploy the quiz-image docker directly on Heroku
+    # Install Heroku CLI to deploy a docker on Heroku
+    - script:
+       name: install Heroku CLI
+       code: |
+         curl https://cli-assets.heroku.com/install.sh | sh
+         heroku --version
     # Create file to login on Heroku
     - script:
-       name: create file login Heroku
+       name: create file Heroku login
        code: |
         cat >~/.netrc <<EOF
           machine api.heroku.com
@@ -115,12 +116,10 @@ deploy:
             login $HEROKU_EMAIL
             password $HEROKU_KEY
         EOF
-        cat ~/.netrc
     # Deploy docker on Heroku
     - script:
        name: deploy docker Heroku
        code: |
-        heroku login
         heroku container:release web --app api-quiz-app-docker
 acceptance-test:
   box: python:3.7.2-alpine

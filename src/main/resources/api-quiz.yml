@@ -8,8 +8,8 @@ info:
     url: www.linkedin.com/in/victor-escudero-garcia
     email: victorescuderogarcia@gmail.com
   license:
-    name: unlicense
-    url: http://unlicense.org
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
 
 host: localhost:8080
 basePath: /api/quiz/v1

@@ -78,7 +78,7 @@ public class PostgreDatasourceConfig {
 
     @Primary
     @Bean
-    public DataSource postgreDataSource() throws Exception {
+    public DataSource postgreDataSource() {
         LOGGER.info("Loading PostgreDataSource");
         return getPostgreConnectionPool().getDataSource();
     }

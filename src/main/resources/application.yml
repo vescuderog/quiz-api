@@ -23,7 +23,7 @@ swagger:
   apiVersion: 1.0.0
   title: Quiz API
   description: API REST
-  license: http://unlicense.org
+  license: https://opensource.org/licenses/MIT
   created: vescudero
   email: victorescuderogarcia@gmail.com
 

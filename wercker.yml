@@ -88,13 +88,38 @@ deploy:
          apk update \
          && apk add --no-cache \
          git \
-         openssh
+         openssh \
+         curl
+    # Install Heroku CLI to deploy a docker
+    - script:
+       name: install Heroku CLI
+       code: |
+         curl https://cli-assets.heroku.com/install.sh | sh
+         heroku --version
     # Deploy package jar on heroku (integration environment)
     - heroku-deploy:
-        key: $HEROKU_KEY
-        key-name: DEPLOY_KEY
-        user: $HEROKU_USER
-        app-name: api-quiz-app
+       key: $HEROKU_KEY
+       key-name: DEPLOY_KEY
+       user: $HEROKU_USER
+       app-name: api-quiz-app
+    # Create file to login on Heroku
+    - script:
+       name: create file login Heroku
+       code: |
+        cat >~/.netrc <<EOF
+          machine api.heroku.com
+            login $HEROKU_USER
+            password $HEROKU_KEY
+          machine git.heroku.com
+            login $HEROKU_USER
+            password $HEROKU_KEY
+        EOF
+    # Deploy docker on Heroku
+    - script:
+       name: deploy docker Heroku
+       code: |
+        heroku login
+        heroku container:release web --app api-quiz-app-docker
 acceptance-test:
   box: python:3.7.2-alpine
   steps:

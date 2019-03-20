@@ -1,7 +1,3 @@
-# This references an Maven container from the
-# Docker Hub https://hub.docker.com/_/maven/
-# Read more about containers on our dev center
-# https://devcenter.wercker.com/overview-and-core-concepts/containers/
 box: maven:3.5.4-jdk-8-alpine
 services:
   - id: postgres
@@ -10,29 +6,26 @@ services:
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_DB: quiz_app
 
-# This is the build pipeline. Pipelines are the core of wercker
-# Read more about pipelines on our dev center
-# https://devcenter.wercker.com/development/pipelines/
 build:
-    # Steps make up the actions in your pipeline
-    # Read more about steps on our dev center:
-    # https://devcenter.wercker.com/development/steps/
   steps:
     # Getting the environment variables
     # - script:
        # name: env
        # code: env
+
     # Install with skip tests
     # https://github.com/wercker/step-maven
     - wercker/maven:
       goals: clean install -DskipTests=true
       cache_repo: true
+
 unit-test:
   steps:
     # Unit testing
     - wercker/maven:
       goals: test
       cache_repo: true
+
 integration-test:
   steps:
     # Set up the database
@@ -42,12 +35,14 @@ integration-test:
          export POSTGRE_DATASOURCE_URL=jdbc:postgresql://$POSTGRES_PORT_5432_TCP_ADDR:$POSTGRES_PORT_5432_TCP_PORT/$POSTGRES_ENV_POSTGRES_DB
          export POSTGRE_DATASOURCE_PASSWORD=$POSTGRES_ENV_POSTGRES_PASSWORD
          export POSTGRE_DATASOURCE_USERNAME=$POSTGRES_ENV_POSTGRES_USER
+
     # Integration testing
     # integration-test -> runs the integration tests of an application
     # verify -> verifies that the integration tests of an application passed
     - wercker/maven:
       goals: verify
       cache_repo: true
+
 sonar:
   steps:
     # Analyze the source code
@@ -59,12 +54,14 @@ sonar:
          -Dsonar.organization=vescuderog-github \
          -Dsonar.host.url=https://sonarcloud.io \
          -Dsonar.login=$LOGIN
+
 publish:
   steps:
     # Creating a Docker image using a Dockerfile
     - internal/docker-build:
        dockerfile: Dockerfile
        image-name: quiz-image
+
     # Publish the image on Docker Hub
     - internal/docker-push:
        image-name: quiz-image
@@ -72,6 +69,7 @@ publish:
        password: $PASSWORD
        registry: https://registry.hub.docker.com
        repository: $USERNAME/quiz-api
+
     # Publish the image on Heroku to deploy in the next pipeline
     - internal/docker-push:
        image-name: quiz-image
@@ -79,6 +77,7 @@ publish:
        password: $HEROKU_KEY
        registry: https://registry.heroku.com
        repository: registry.heroku.com/api-quiz-app-docker/web
+
 deploy:
   steps:
     # Install the required dependencies
@@ -91,12 +90,14 @@ deploy:
          openssh \
          curl \
          nodejs
+
     # Deploy package jar on heroku (integration environment)
     - heroku-deploy:
        key: $HEROKU_KEY
        key-name: DEPLOY_KEY
        user: $HEROKU_USER
        app-name: api-quiz-app
+
     # Another option is to deploy the quiz-image docker directly on Heroku
     # Install Heroku CLI to deploy a docker on Heroku
     - script:
@@ -104,6 +105,7 @@ deploy:
        code: |
          curl https://cli-assets.heroku.com/install.sh | sh
          heroku --version
+
     # Create file to login on Heroku
     - script:
        name: create file Heroku login
@@ -116,11 +118,13 @@ deploy:
             login $HEROKU_EMAIL
             password $HEROKU_KEY
         EOF
+
     # Deploy docker on Heroku
     - script:
        name: deploy docker Heroku
        code: |
         heroku container:release web --app api-quiz-app-docker
+
 acceptance-test:
   box: python:3.7.2-alpine
   steps:
@@ -130,6 +134,7 @@ acceptance-test:
         code: |
           echo "python version $(python --version) running"
           echo "pip version $(pip --version) running"
+
     # Install the required dependencies
     # Clone and install the qa project (python)
     - script:
@@ -139,6 +144,7 @@ acceptance-test:
          git clone https://$GIT_HUB_USER:$GIT_HUB_TOKEN@github.com/vescuderog/quiz-api-qa.git
          cd quiz-api-qa
          pip3 install -r requirements.txt
+
     # Acceptance testing
     - script:
        name: acceptance test

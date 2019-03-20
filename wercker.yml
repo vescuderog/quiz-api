@@ -89,7 +89,8 @@ deploy:
          && apk add --no-cache \
          git \
          openssh \
-         curl
+         curl \
+         nodejs
     # Install Heroku CLI to deploy a docker
     - script:
        name: install Heroku CLI
@@ -108,12 +109,13 @@ deploy:
        code: |
         cat >~/.netrc <<EOF
           machine api.heroku.com
-            login $HEROKU_USER
+            login $HEROKU_EMAIL
             password $HEROKU_KEY
           machine git.heroku.com
-            login $HEROKU_USER
+            login $HEROKU_EMAIL
             password $HEROKU_KEY
         EOF
+        cat ~/.netrc
     # Deploy docker on Heroku
     - script:
        name: deploy docker Heroku

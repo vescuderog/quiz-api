@@ -8,6 +8,8 @@
 
 Quiz API is a Spring Boot application.
 
+This project was created to learn how we can use [Wercker](https://app.wercker.com/) for Continuous Integration and Continuous Deployment (CI/CD) of a Spring Boot application. We use Wercker pipeline to run maven build goals, run unit tests and integration tests in parallel, check code quality using [SonarCloud](https://sonarcloud.io/projects), build Docker image and push it to [DockerHub](https://hub.docker.com/), deploy it to [Heroku](https://www.heroku.com/) and finally, run the [acceptance tests](https://github.com/vescuderog/quiz-api-qa).
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.

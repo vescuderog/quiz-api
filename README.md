@@ -3,9 +3,10 @@
 [![Build status](https://app.wercker.com/status/a4441a77f675040ee7f5941830dc986c/s/ "wercker status")](https://app.wercker.com/project/byKey/a4441a77f675040ee7f5941830dc986c)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=com.lapots.breed.judge:judge-rule-engine&metric=alert_status)](https://sonarcloud.io/dashboard?id=quiz-api)
 [![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)](https://api-quiz-app-docker.herokuapp.com/swagger-ui.html)
+[![Docker Automated build](https://img.shields.io/docker/automated/vescuderog/quiz-api)](https://hub.docker.com/r/vescuderog/quiz-api)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Quiz API is a Spring Boot app.
+Quiz API is a Spring Boot application.
 
 ## Getting Started
 
@@ -36,7 +37,7 @@ mvn spring-boot:run
 
 ## Built With
 
-* [Spring Boot](https://spring.io/projects/spring-boot)
+* [Spring Boot](https://spring.io/projects/spring-boot/)
 * [Swagger](https://swagger.io/)
 * [Liquibase](https://www.liquibase.org/)
 * [MapStruct](https://mapstruct.org/)

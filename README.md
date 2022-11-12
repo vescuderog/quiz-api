@@ -1,6 +1,5 @@
 # Quiz API
 
-[![Build status](https://app.wercker.com/status/a4441a77f675040ee7f5941830dc986c/s/ "wercker status")](https://app.wercker.com/project/byKey/a4441a77f675040ee7f5941830dc986c)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=com.lapots.breed.judge:judge-rule-engine&metric=alert_status)](https://sonarcloud.io/dashboard?id=quiz-api)
 [![Heroku](https://img.shields.io/badge/Heroku-success-green)](https://api-quiz-app-docker.herokuapp.com/swagger-ui.html)
 [![Docker Automated build](https://img.shields.io/docker/automated/vescuderog/quiz-api)](https://hub.docker.com/r/vescuderog/quiz-api)
